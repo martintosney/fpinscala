@@ -99,15 +99,15 @@ class ListSpec extends FlatSpec {
 
   //3.11
   "sumLeft" should "sum a list" in {
-    assert(sumLeft(List(1,2,3,4))===10)
+    assert(sumLeft(dropList)===10)
   }
 
   "productLeft" should "multiply a list" in {
-    assert(productLeft(List(1,2,3,4))===24)
+    assert(productLeft(dropList)===24)
   }
 
   "lengthLeft" should "count elements in a list" in {
-    assert(lengthLeft(List(1,2,3,4))===4)
+    assert(lengthLeft(dropList)===4)
   }
 
   //3.12
@@ -118,5 +118,46 @@ class ListSpec extends FlatSpec {
 
   it should "return the input list for a single element list" in {
     assert(reverse(reverseList)===reverseList)
+  }
+
+  it should "reverse a list with more than one element" in {
+    assert(reverse(dropList)===dropList2)
+  }
+
+  //3.13
+  "foldLeftViaRight" should "give the same result as foldLeft" in {
+    assert(foldLeftViaRight(dropList,0)(_ + _)===
+      foldLeft(dropList,0)(_ + _))
+  }
+
+  "foldRightViaLeft" should "give the same result as foldRight" in {
+    assert(foldRightViaLeft(dropList,0)(_ + _)===
+      foldRight(dropList,0)(_ + _))
+  }
+
+  //3.14
+  "appendFold" should "append two lists" in {
+    assert(appendFold(List(1,2), List(3,4))===List(1,2,3,4))
+  }
+
+  //3.15
+  "concatList" should "return Nil given an empty list" in {
+    assert(concatList(Nil)===Nil)
+  }
+
+  it should "return Nil given a list containing an empty list" in {
+    assert(concatList(List(Nil))===Nil)
+  }
+
+  it should "return Nil given a list containing two empty lists" in {
+    assert(concatList(List(Nil, Nil))===Nil)
+  }
+
+  it should "return all elements for a list containing one list" in {
+    assert(concatList(List(dropList))===dropList)
+  }
+
+  it should "return all elements for a list containing two lists" in {
+    assert(concatList(List(dropList, dropList))===List(1,2,3,4,1,2,3,4))
   }
 }
