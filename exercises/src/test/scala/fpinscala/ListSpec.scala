@@ -1,12 +1,15 @@
 package fpinscala.datastructures
 
 import org.scalatest.FlatSpec
+//import org.scalatest.Matchers._
 
+// class ListSpec extends FlatSpec with Matchers {
 class ListSpec extends FlatSpec {
   import List._
   // 3.1
   "The expression in exercise 3.1" should "match the third case" in {
     assert(x===(1+2))
+    // x shouldBe (1+2)
   }
 
   //3.2
@@ -159,5 +162,81 @@ class ListSpec extends FlatSpec {
 
   it should "return all elements for a list containing two lists" in {
     assert(concatList(List(dropList, dropList))===List(1,2,3,4,1,2,3,4))
+  }
+
+  //3.16
+  "addOneToList" should "return Nil given an empty list" in {
+    assert(addOneToList(Nil)===Nil)
+  }
+
+  it should "add 1 to each element in a non-empty list" in {
+    assert(addOneToList(dropList)===List(2,3,4,5))
+  }
+
+  //3.17
+  val doubleList = List(1.0, 2.0)
+  "stringifyDoubleList" should "return Nil given an empty list" in {
+    assert(stringifyDoubleList(Nil)===Nil)
+  }
+
+  it should "turn doubles into strings" in {
+    assert(stringifyDoubleList(doubleList)===List("1.0", "2.0"))
+  }
+
+  //3.18
+  "map" should "have the same behaviour as addOneToList" in {
+    assert(map(dropList)(_ + 1)===addOneToList(dropList))
+  }
+
+  it should "have the same behaviour as stringifyDoubleList" in {
+    assert(map(doubleList)(_.toString)===stringifyDoubleList(doubleList))
+  }
+
+  //3.19
+  "filter" should "return the input list given a non-exlusion filter" in {
+    assert(filter(dropList)(_ => true)===dropList)
+  }
+
+  it should "return nothing given a complete exclusion filter" in {
+    assert(filter(dropList)(_ => false)===Nil)
+  }
+
+  it should "return elements greater than two" in {
+    assert(filter(dropList)(_ > 2)===List(3,4))
+  }
+
+  //3.20
+  "flatMap" should "return Nil given an input list of Nil" in {
+    assert(flatMap(Nil)(i => List(i,i))===Nil)
+  }
+
+  it should "return a single list" in {
+    assert(flatMap(dropList)(i => List(i,i))===List(1,1,2,2,3,3,4,4))
+  }
+
+  //3.21
+  "flatMapFilter" should "return the same result as Filter" in {
+    assert(flatMapFilter(dropList)(_ => true)===filter(dropList)(_ => true))
+    assert(flatMapFilter(dropList)(_ => false)===filter(dropList)(_ => false))
+    assert(flatMapFilter(dropList)(_ > 2)===filter(dropList)(_ > 2))
+  }
+
+  //3.22
+  val corList1 = List(1, 3, 5)
+  val corList2 = List(2, 4, 6)
+  val corList3 = List(3, 5)
+  "addCorresponding" should "work for two same-sized lists" in {
+    assert(addCorresponding(corList1, corList2)===List(3,7,11))
+  }
+
+  it should "work for lists of different sizes" in {
+    assert(addCorresponding(corList1, corList3)===List(4,8,5))
+  }
+
+  //3.23
+  def zipAdd(a: Int, b: Int): Int = a + b
+  "zipWith" should "behave the same as addCorresponding" in {
+    assert(zipWith(corList1, corList2)(zipAdd)===addCorresponding(corList1, corList2))
+    assert(zipWith(corList1, corList3)(zipAdd)===addCorresponding(corList1, corList3))
   }
 }

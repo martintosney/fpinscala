@@ -116,5 +116,34 @@ object List { // `List` companion object. Contains functions for creating and wo
   def concatList[A](l: List[List[A]]): List[A] =
     foldLeft(l, List[A]())((b,a) => append(a,b))
 
-  def map[A,B](l: List[A])(f: A => B): List[B] = sys.error("todo")
+  def addOneToList(l: List[Int]): List[Int] =
+    foldRight(l, List[Int]())((a,b) => Cons(a+1,b))
+
+  def stringifyDoubleList(l: List[Double]): List[String] =
+    foldRight(l, List[String]())((a,b) => Cons(a.toString,b))
+
+  def map[A,B](l: List[A])(f: A => B): List[B] = 
+    foldRight(l, List[B]())((a,b) => Cons(f(a),b))
+
+  def filter[A](as: List[A])(f: A => Boolean): List[A] =
+    foldRight(as, List[A]())((a,b) => if (f(a)) Cons(a,b) else b)
+
+  def flatMap[A,B](as: List[A])(f: A => List[B]): List[B] =
+    foldLeft(as, List[B]())((b,a) => append(b, f(a)))
+
+  def flatMapFilter[A](as: List[A])(f: A => Boolean): List[A] =
+    flatMap(as)((a) => if (f(a)) List(a) else Nil)
+
+  def addCorresponding(l1: List[Int], l2: List[Int]): List[Int] = (l1, l2) match {
+    case (r, Nil) => r
+    case (Nil, r) => r
+    case (Cons(l1h, l1t), Cons(l2h, l2t)) => Cons(l1h+l2h, addCorresponding(l1t, l2t))
+  }
+
+  def zipWith[A](l1: List[A], l2: List[A])(f: (A,A)=>A): List[A] = (l1, l2) match {
+    case (r, Nil) => r
+    case (Nil, r) => r
+    case (Cons(l1h, l1t), Cons(l2h, l2t)) => Cons(f(l1h,l2h), zipWith(l1t, l2t)(f))
+  }
+
 }
