@@ -239,4 +239,24 @@ class ListSpec extends FlatSpec {
     assert(zipWith(corList1, corList2)(zipAdd)===addCorresponding(corList1, corList2))
     assert(zipWith(corList1, corList3)(zipAdd)===addCorresponding(corList1, corList3))
   }
+
+  //3.24
+  "hasSubsequence" should "detect the subsequence" in {
+    assert(hasSubsequence(dropList,Nil))
+    assert(hasSubsequence(dropList,List(1)))
+    assert(hasSubsequence(dropList,List(2)))
+    assert(hasSubsequence(dropList,List(3)))
+    assert(hasSubsequence(dropList,List(4)))
+    assert(hasSubsequence(dropList,List(1,2)))
+    assert(hasSubsequence(dropList,List(2,3)))
+    assert(hasSubsequence(dropList,List(3,4)))
+    assert(hasSubsequence(dropList,List(1,2,3)))
+    assert(hasSubsequence(dropList,List(2,3,4)))
+    assert(hasSubsequence(dropList,List(1,2,3,4)))
+  }
+
+  it should "return false where no subsequence" in {
+    assert(!hasSubsequence(dropList, List(2,4)))
+  }
+
 }
