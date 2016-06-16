@@ -10,65 +10,65 @@ class EitherSpec extends FlatSpec {
   def increment(i: Int) : Int = i + 1
 
   "map" should "return the Left value when used on a Left" in {
-    assert((Left("Error") map increment) === Left("Error"))
+    (Left("Error") map increment) shouldBe Left("Error")
   }
 
   it should "apply the function when used on a Right" in {
-    assert((Right(5) map increment) === Right(6))
+    (Right(5) map increment) shouldBe Right(6)
   }
 
   def incrementIfEven(i: Int) : Either[String, Int] = 
     if (i%2==0) Right(i+1) else Left("Increment Error " + i.toString)
 
   "flatmap" should "return the Left value when used on a Left" in {
-    assert((Left("Error") flatMap incrementIfEven) === Left("Error"))
+    (Left("Error") flatMap incrementIfEven) shouldBe Left("Error")
   }
 
   it should "return a Left when used on an odd value" in {
-    assert((Right(5) flatMap incrementIfEven) === Left("Increment Error 5"))
+    (Right(5) flatMap incrementIfEven) shouldBe Left("Increment Error 5")
   }
 
   it should "return a Right when used on an even value" in {
-    assert((Right(6) flatMap incrementIfEven) === Right(7))
+    (Right(6) flatMap incrementIfEven) shouldBe Right(7)
   }
 
   "orElse" should "return the Right when used on a Right" in {
-    assert((Right(7) orElse Right(4)) === Right(7))
+    (Right(7) orElse Right(4)) shouldBe Right(7)
   }
 
   it should "return the Right when used on a Left" in {
-    assert((Left("An error happened") orElse Right(3)) === Right(3))
+    (Left("An error happened") orElse Right(3)) shouldBe Right(3)
   }
 
   def add (a: Int, b: Int) : Int = a + b
 
   "map2" should "return the first Left" in {
-    assert((Left("L1").map2(Left("L2"))(add)) === Left("L1"))
+    (Left("L1").map2(Left("L2"))(add)) shouldBe Left("L1")
   }
 
   it should "return the second Left" in {
-    assert((Right(1).map2(Left("L2"))(add)) === Left("L2"))
+    (Right(1).map2(Left("L2"))(add)) shouldBe Left("L2")
   }
 
   it should "return the applied function given two Rights" in {
-    assert((Right(1).map2(Right(2))(add)) === Right(3))
+    (Right(1).map2(Right(2))(add)) shouldBe Right(3)
   }
 
   //4.7
   "traverse" should "return the first Left encountered when applied" in {
-    assert(traverse(List(2,3,4,5))(incrementIfEven) === Left("Increment Error 3"))
+    traverse(List(2,3,4,5))(incrementIfEven) shouldBe Left("Increment Error 3")
   }
 
   it should "return the mapped list if no errors" in {
-    assert(traverse(List(2,4,6,8))(incrementIfEven) === Right(List(3,5,7,9)))
+    traverse(List(2,4,6,8))(incrementIfEven) shouldBe Right(List(3,5,7,9))
   }
 
   "sequence" should "return the first Left encountered when applied" in {
-    assert(sequence(List(Right(1),Left("Error"),Right(3))) === Left("Error"))
+    sequence(List(Right(1),Left("Error"),Right(3))) shouldBe Left("Error")
   }
 
   it should "return a Right of all the values when no Lefts encountered" in {
-    assert(sequence(List(Right(1),Right(2),Right(3))) === Right(List(1,2,3)))
+    sequence(List(Right(1),Right(2),Right(3))) shouldBe Right(List(1,2,3))
   }
 
   // 4.8

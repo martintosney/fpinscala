@@ -1,8 +1,9 @@
 package fpinscala.datastructures
 
 import org.scalatest.FlatSpec
+import org.scalatest.Matchers
 
-class TreeSpec extends FlatSpec {
+class TreeSpec extends FlatSpec with Matchers {
   import Tree._
 
   val leaf1 = Leaf(1);
@@ -15,78 +16,78 @@ class TreeSpec extends FlatSpec {
 
   //3.25
   "size" should "return 1 given a leaf" in {
-    assert(size(leaf1)===1)
+    Tree.size(leaf1) shouldBe 1
   }
 
   it should "return 3 for branch1" in {
-    assert(size(branch1)===3)
+    Tree.size(branch1) shouldBe 3
   }
 
   it should "return 5 for branch2" in {
-    assert(size(branch2)===5)
+    Tree.size(branch2) shouldBe 5
   }
 
   it should "return 7 for branch3" in {
-    assert(size(branch3)===7)
+    Tree.size(branch3) shouldBe 7
   }
 
   //3.26
   "maximum" should "return the leaf value when given a leaf" in {
-    assert(maximum(leaf1)===leaf1.value)
+    maximum(leaf1) shouldBe leaf1.value
   }
 
   it should "return leaf2 for branch1" in {
-    assert(maximum(branch1)===leaf2.value)
+    maximum(branch1) shouldBe leaf2.value
   }
 
   it should "return leaf4 for branch3" in {
-    assert(maximum(branch3)===leaf4.value)
+    maximum(branch3) shouldBe leaf4.value
   }
 
   //3.27
   "depth" should "return 0 for a leaf" in {
-    assert(depth(leaf1)===0)
+    depth(leaf1) shouldBe 0
   }
 
   it should "return 1 for a branch with two leaves" in {
-    assert(depth(branch1)===1)
+    depth(branch1) shouldBe 1
   }
 
   it should "return 3 for branch 3" in {
-    assert(depth(branch3)===3)
+    depth(branch3) shouldBe 3
   }
 
   //3.28
   "map" should "add 1 to a leaf" in {
-    assert(map(leaf1)(_ + 1)===Leaf(2))
+    map(leaf1)(_ + 1) shouldBe Leaf(2)
   }
 
   it should "add 1 to a branch" in {
-    assert(map(branch1)(_ + 1)===Branch(Leaf(2),Leaf(3)))
+    map(branch1)(_ + 1) shouldBe Branch(Leaf(2),Leaf(3))
   }
 
   //3.29
   "fold" should "have the same behaviour as size" in {
-    assert(sizeUsingFold(leaf1)===size(leaf1))
-    assert(sizeUsingFold(branch1)===size(branch1))
-    assert(sizeUsingFold(branch2)===size(branch2))
-    assert(sizeUsingFold(branch3)===size(branch3))
+    sizeUsingFold(leaf1) shouldBe Tree.size(leaf1)
+    sizeUsingFold(branch1) shouldBe Tree.size(branch1)
+    sizeUsingFold(branch2) shouldBe Tree.size(branch2)
+    sizeUsingFold(branch3) shouldBe Tree.size(branch3)
   }
   
   it should "have the same behaviour as maximum" in {
-    assert(maximumUsingFold(leaf1)===maximum(leaf1))
-    assert(maximumUsingFold(branch1)===maximum(branch1))
-    assert(maximumUsingFold(branch2)===maximum(branch2))
+    maximumUsingFold(leaf1) shouldBe maximum(leaf1)
+    maximumUsingFold(branch1) shouldBe maximum(branch1)
+    maximumUsingFold(branch2) shouldBe maximum(branch2)
   }
 
   it should "have the same behaviour as depth" in {
-    assert(depthUsingFold(leaf1)===depth(leaf1))
-    assert(depthUsingFold(branch1)===depth(branch1))
-    assert(depthUsingFold(branch2)===depth(branch2))
+    depthUsingFold(leaf1) shouldBe depth(leaf1)
+    depthUsingFold(branch1) shouldBe depth(branch1)
+    depthUsingFold(branch2) shouldBe depth(branch2)
   }
 
   it should "have the same behaviour as map" in {
-    assert(mapUsingFold(leaf1)(_.toString)===map(leaf1)(_.toString))
-    assert(mapUsingFold(branch1)(_.toString)===map(branch1)(_.toString))
+    mapUsingFold(leaf1)(_.toString) shouldBe map(leaf1)(_.toString)
+    mapUsingFold(branch1)(_.toString) shouldBe map(branch1)(_.toString)
   }
 }
