@@ -16,6 +16,18 @@ class StreamSpec extends FlatSpec with Matchers {
   }
 
   //5.2
-  // "take" should "return an empty Stream when passed 0" in {
-  //   assert
+  "take" should "return Empty, no matter how many elements are taken" in {
+    Empty take 0 shouldBe Empty
+    Empty take 1 shouldBe Empty
+  }
+
+  it should "return an empty Stream when passed 0" in {
+    Stream(1,2,3) take 0 shouldBe Empty
+  }
+
+  it should "return the first X elements when taking X" in {
+    println((Stream(1,2,3) take 2).toList)
+    (Stream(1,2,3) take 2).toList shouldBe Stream(1,2).toList
+  }
+
 }
