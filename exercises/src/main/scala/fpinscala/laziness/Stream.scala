@@ -24,14 +24,31 @@ trait Stream[+A] {
 
   def drop(n: Int): Stream[A] = sys.error("todo")
 
-  def takeWhile(p: A => Boolean): Stream[A] = sys.error("todo")
+  def takeWhile(p: A => Boolean): Stream[A] = this match {
+    case Cons(h, t) if p(h()) => cons(h(), t().takeWhile(p))
+    case _ => Empty
+  }
 
-  def forAll(p: A => Boolean): Boolean = sys.error("todo")
+  def forAll(p: A => Boolean): Boolean = foldRight(true)((a,b) => p(a) && b)
 
-  def headOption: Option[A] = sys.error("todo")
+  def takeWhileFolded(p: A => Boolean): Stream[A] =
+    foldRight(Empty: Stream[A])((a,b) => if (p(a)) cons(a, b) else Empty)
+
+  def headOption: Option[A] = foldRight(Option.empty[A])((a,_) => Some(a))
 
   // 5.7 map, filter, append, flatmap using foldRight. Part of the exercise is
   // writing your own function signatures.
+  def map[B](f: A => B): Stream[B] = foldRight(Empty: Stream[B])((a,b) => cons(f(a), b))
+
+  def filter(f: A => Boolean): Stream[A] = 
+    foldRight(Empty: Stream[A])((a,b) => if (f(a)) cons(a, b) else b)
+
+  def append[B>:A](x: => Stream[B]): Stream[B] = 
+    foldRight(x)((a,b) => cons(a,b))
+
+  def flatMap[B](f: A => Stream[B]): Stream[B] = {
+    foldRight(Empty: Stream[B])( (a,b) => f(a) append b )
+  }
 
   def startsWith[B](s: Stream[B]): Boolean = sys.error("todo")
 
