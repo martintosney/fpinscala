@@ -84,4 +84,9 @@ object Stream {
     def mapFunc(x: (A,S)) : Stream[A] = Stream.cons(x._1, unfold(x._2)(f))
     f(z) map mapFunc getOrElse Empty
   }
+
+  val onesUnfold: Stream[Int] = unfold(1)(_ => Some(1,1))
+  def constantUnfold[A](a: A): Stream[A] = unfold(a)(x => Some(x,x))
+  def fromUnfold(n: Int): Stream[Int] = unfold(n)(x => Some(x+1,x+1))
+  def fibsUnfold: Stream[Int] = unfold((0,1))( (t) => Some((t._1, (t._2, t._1 + t._2))) )
 }

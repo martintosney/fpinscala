@@ -115,4 +115,22 @@ class StreamSpec extends FlatSpec with Matchers {
   it should "generate a finite stream, counting from 5 to 1" in {
     ( unfold(5)(a => if (a > 0) Some((a,a-1)) else None) take 10).toList shouldBe List(5,4,3,2,1)
   }
+
+  //5.12
+  "onesUnfold" should "behave the same as ones" in {
+    (onesUnfold take 50).toList shouldBe (ones take 50).toList
+  }
+
+  "constantUnfold" should "behave the same as constant" in {
+    (constantUnfold(10) take 50).toList shouldBe (constant(10) take 50).toList
+  }
+
+  "fromUnfold" should "behave the same as from" in {
+    (from(10) take 50).toList shouldBe (from(10) take 50).toList
+  }
+
+  "fibsUnfold" should "behave the same as fibs" in {
+    (fibsUnfold take 20).toList shouldBe (fibs take 20).toList
+  }
+
 }
