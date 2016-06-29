@@ -71,7 +71,17 @@ object Stream {
     else cons(as.head, apply(as.tail: _*))
 
   val ones: Stream[Int] = Stream.cons(1, ones)
-  def from(n: Int): Stream[Int] = sys.error("todo")
+  def constant[A](a: A): Stream[A] = Stream.cons(a, constant(a))
+  def from(n: Int): Stream[Int] = Stream.cons(n, from(n+1))
 
-  def unfold[A, S](z: S)(f: S => Option[(A, S)]): Stream[A] = sys.error("todo")
+  def fibs: Stream[Int] = {
+    def fibsInner(currentHigh: Int, nextValue: Int) : Stream[Int] = 
+      Stream.cons(currentHigh, fibsInner(nextValue, currentHigh + nextValue))
+    fibsInner(0, 1)
+  }
+
+  def unfold[A, S](z: S)(f: S => Option[(A, S)]): Stream[A] = {
+    def mapFunc(x: (A,S)) : Stream[A] = Stream.cons(x._1, unfold(x._2)(f))
+    f(z) map mapFunc getOrElse Empty
+  }
 }

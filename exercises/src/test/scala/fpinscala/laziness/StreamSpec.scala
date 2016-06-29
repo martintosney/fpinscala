@@ -87,4 +87,32 @@ class StreamSpec extends FlatSpec with Matchers {
     (Stream(1,2) flatMap (a => cons(a.toString, cons(a.toString, Empty)))).toList shouldBe
       List("1","1","2","2")
   }
+
+  //5.8
+  "constant" should "give us a bunch of 2s" in {
+    (constant(2) take 5).toList shouldBe List(2,2,2,2,2)
+  }
+
+  //5.9
+  "from" should "generate a stream starting from 4" in {
+    (from(5) take 5).toList shouldBe List(5,6,7,8,9)
+  }
+
+  //5.10
+  "fibs" should "return fibonacci numbers" in {
+    (fibs take 7).toList shouldBe List(0,1,1,2,3,5,8)
+  }
+
+  //5.11
+  "unfold" should "generate an empty stream if the function always returns None" in {
+     unfold(1)(a => None) shouldBe Empty
+  }
+
+  it should "generate an infinite Stream of alternating 1s and -1s" in {
+    ( unfold(-1)(a => Some((-a, -a))) take 5).toList shouldBe List(1,-1,1,-1,1)
+  }
+
+  it should "generate a finite stream, counting from 5 to 1" in {
+    ( unfold(5)(a => if (a > 0) Some((a,a-1)) else None) take 10).toList shouldBe List(5,4,3,2,1)
+  }
 }
