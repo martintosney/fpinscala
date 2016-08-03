@@ -53,6 +53,42 @@ trait Stream[+A] {
   def startsWith[B](s: Stream[B]): Boolean = sys.error("todo")
 
   def toList: List[A] = foldRight(List.empty[A])((b, a) => b :: a)
+
+  def mapUnfold[B](f: A => B): Stream[B] = {
+    unfold(this)(s => s match {
+      case Cons(h, t) => Some((f(h()), t()))
+      case _ => None
+    })
+  }
+
+  def takeUnfold(n: Int): Stream[A] = unfold((this, n)){
+    case (Cons(h,t), i) if (i>0) => Some((h(), (t(),i-1)))
+    case _ => None
+  }
+
+  def takeWhileUnfold(p: A => Boolean): Stream[A] = unfold(this){
+    case Cons(h,t) if p(h()) => Some((h(), t()))
+    case _ => None
+  }
+
+  def zipWith[B,C](s: Stream[B])(f: (A,B)=>C): Stream[C] = unfold((this, s)){
+    case (Cons(h1, t1), Cons(h2, t2)) => Some((f(h1(),h2()), (t1(), t2())))
+    case _ => None
+  }
+
+  // def zipWith2(s: Stream[A])(f: (A,A)=>A): Stream[A] = unfold((this, s)){
+  //   case (Cons(h1, t1), Cons(h2, t2)) => Some((f(h1(),h2()), (t1(), t2())))
+  //   case _ => None
+  // }
+
+  def zipAll[B](s2: Stream[B]): Stream[(Option[A],Option[B])] = {
+    unfold((this, s2)){
+      case (Cons(h1, t1), Cons(h2, t2)) => Some((Some(h1()),Some(h2())), (t1(), t2()))
+      case (Cons(h1, t1), _) => Some((Some(h1()),None), (t1(), Empty))
+      case (_, Cons(h2, t2)) => Some((None, Some(h2())), (Empty, t2()))
+      case _ => None
+    }
+  }
 }
 case object Empty extends Stream[Nothing]
 case class Cons[+A](h: () => A, t: () => Stream[A]) extends Stream[A]

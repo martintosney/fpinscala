@@ -133,4 +133,33 @@ class StreamSpec extends FlatSpec with Matchers {
     (fibsUnfold take 20).toList shouldBe (fibs take 20).toList
   }
 
+  //5.13
+  "mapUnfold" should "behave the same as map" in {
+    ((from(1) mapUnfold (x => x+1)) take 50).toList shouldBe 
+      ((from(1) map (x => x+1)) take 50).toList 
+  }
+
+  "takeUnfold" should "behave the same as take" in {
+    (from(1) takeUnfold 50).toList shouldBe
+      (from(1) take 50).toList
+  }
+
+  "takeWhileUnfold" should "behave the same as takeWhile" in {
+    (from(1) takeWhileUnfold (_<50)).toList shouldBe
+      (from(1) takeWhile (_<50)).toList
+  }
+
+  def zipAdd(a: Int, b: Int): Int = a + b
+  "zipWith" should "behave zip together two Streams" in {
+    (from(1).zipWith(from(1))(zipAdd) take 5).toList shouldBe 
+      List(2,4,6,8,10)
+  }
+
+  "zipAll" should "combine two streams of different sizes" in {
+    def intStream = from(1) take 5
+    def charStream = Stream('a', 'b', 'c')
+    (intStream zipAll charStream).toList shouldBe 
+      List((Some(1),Some('a')), (Some(2),Some('b')), (Some(3),Some('c')),
+        (Some(4),None), (Some(5), None))
+  }
 }
