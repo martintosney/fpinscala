@@ -29,6 +29,18 @@ class StreamSpec extends FlatSpec with Matchers {
     (Stream(1,2,3) take 2).toList shouldBe List(1,2)
   }
 
+  "drop" should "return the Stream when argument is zero" in {
+    (Stream(1,2,3) drop 0).toList shouldBe List(1,2,3)
+  }
+
+  it should "return a partial Stream" in {
+    (Stream(1,2,3) drop 2).toList shouldBe List(3)
+  }
+
+  it should "return Empty when argument is greater than or equal to Stream length" in {
+    Stream(1,2,3) drop 4 shouldBe Empty
+  }
+
   //5.3
   "takeWhile" should "return Empty if the predicate always evaluates to false" in {
     Stream(1,2,3) takeWhile (a => false) shouldBe Empty

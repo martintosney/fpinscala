@@ -22,7 +22,11 @@ trait Stream[+A] {
     case _ => Empty
   }
 
-  def drop(n: Int): Stream[A] = sys.error("todo")
+  def drop(n: Int): Stream[A] = this match {
+    case Cons(h, t) if (n>=1) => t().drop(n-1)
+    case c: Cons[A] => c
+    case _ => Empty
+  }
 
   def takeWhile(p: A => Boolean): Stream[A] = this match {
     case Cons(h, t) if p(h()) => cons(h(), t().takeWhile(p))
@@ -50,10 +54,13 @@ trait Stream[+A] {
     foldRight(Empty: Stream[B])( (a,b) => f(a) append b )
   }
 
+  def zipAll[B](s2: Stream[B]): Stream[(Option[A],Option[B])] = zipAllUnfold(s2)
+
   def startsWith[B](s: Stream[B]): Boolean = sys.error("todo")
 
   def toList: List[A] = foldRight(List.empty[A])((b, a) => b :: a)
 
+<<<<<<< HEAD
   def mapUnfold[B](f: A => B): Stream[B] = {
     unfold(this)(s => s match {
       case Cons(h, t) => Some((f(h()), t()))
@@ -89,6 +96,20 @@ trait Stream[+A] {
       case _ => None
     }
   }
+=======
+  def mapUnfold[B](f: A => B): Stream[B] = 
+    unfold(this)(a => a match {
+      case Cons(h, t) => Some((f(h()), t()))
+      case _ => None
+    })
+
+  def takeUnfold(n: Int): Stream[A] = ???
+
+  def takeWhileUnfold(p: A => Boolean): Stream[A] = ???
+
+  def zipWithUnfold[A](l1: List[A], l2: List[A])(f: (A,A)=>A): List[A] = ???
+  def zipAllUnfold[B](s2: Stream[B]): Stream[(Option[A],Option[B])] = ???
+>>>>>>> origin/master
 }
 case object Empty extends Stream[Nothing]
 case class Cons[+A](h: () => A, t: () => Stream[A]) extends Stream[A]
