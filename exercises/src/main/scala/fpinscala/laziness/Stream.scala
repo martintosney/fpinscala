@@ -54,7 +54,11 @@ trait Stream[+A] {
     foldRight(Empty: Stream[B])( (a,b) => f(a) append b )
   }
 
-  def startsWith[B](s: Stream[B]): Boolean = sys.error("todo")
+  def startsWith[B](s: Stream[B]): Boolean = {
+    val zippedStream = this.zipAll(s)
+    val nonMatch = zippedStream filter (x => (x._1 != x._2 && x._2 != None) || x._1 == None)
+    nonMatch == Empty
+  }
 
   def toList: List[A] = foldRight(List.empty[A])((b, a) => b :: a)
 

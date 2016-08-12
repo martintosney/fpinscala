@@ -174,4 +174,21 @@ class StreamSpec extends FlatSpec with Matchers {
       List((Some(1),Some('a')), (Some(2),Some('b')), (Some(3),Some('c')),
         (Some(4),None), (Some(5), None))
   }
+
+  //5.14
+  "startsWith" should "return false if the full Stream is Empty" in {
+    Empty startsWith Stream(1) shouldBe false
+  }
+
+  it should "return true if the sub-stream is Empty" in {
+    Stream(1) startsWith Empty shouldBe true
+  }
+
+  it should "return true if both the full stream and sub-stream are equal" in {
+    Stream(1,2) startsWith Stream(1,2) shouldBe true
+  }
+
+  it should "return true is the full stream starts with the sub-stream" in {
+    Stream(1,2,3) startsWith Stream(1,2) shouldBe true
+  }
 }
