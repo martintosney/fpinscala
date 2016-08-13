@@ -191,4 +191,21 @@ class StreamSpec extends FlatSpec with Matchers {
   it should "return true is the full stream starts with the sub-stream" in {
     Stream(1,2,3) startsWith Stream(1,2) shouldBe true
   }
+
+  //5.15
+  def streamToList[A](s: Stream[Stream[A]]) = (s map (x=>x.toList)).toList
+
+  "tails" should "return a Stream containing Empty when given Empty" in {
+    streamToList(Empty.tails) shouldBe streamToList(Stream(Empty))
+  }
+
+  it should "return the input Stream and Empty given a Stream with one element" in {
+    streamToList(Stream(1).tails) shouldBe streamToList(Stream(Stream(1),Empty))
+  }
+  
+  it should "return all tails" in {
+    streamToList(Stream(1,2,3).tails) shouldBe streamToList(
+      Stream(Stream(1,2,3), Stream(2,3), Stream(3), Empty)
+    )
+  }
 }
